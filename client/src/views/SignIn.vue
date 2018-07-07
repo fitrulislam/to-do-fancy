@@ -108,9 +108,9 @@ export default {
     },
     loginfb () {
       const vm = this
-      FB.login(function (response) {
+      window.FB.login(function (response) {
         if (response.status === 'connected') {
-          FB.api('/me', {fields: ['id', 'name', 'email']}, (data) => {
+          window.FB.api('/me', {fields: ['id', 'name', 'email']}, (data) => {
             vm.$http.post('https://user-api.roarized.com/api/signup', {
               fbId: data.id,
               email: data.email,

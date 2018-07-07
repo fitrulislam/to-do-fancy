@@ -16,9 +16,9 @@ vueFb.install = function install (Vue, options) {
   }(document, 'script', 'facebook-jssdk'))
 
   window.fbAsyncInit = function onSDKInit () {
-    FB.init(options)
-    FB.AppEvents.logPageView()
-    Vue.FB = FB
+    window.FB.init(options)
+    window.FB.AppEvents.logPageView()
+    Vue.FB = window.FB
 
     window.dispatchEvent(new Event('fb-sdk-ready'))
   }

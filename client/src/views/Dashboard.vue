@@ -90,7 +90,7 @@ export default {
     signout () {
       localStorage.removeItem('token')
       localStorage.removeItem('status')
-      FB.logout(function (response) {
+      window.FB.logout(function (response) {
       })
       this.$router.push('/')
     },
