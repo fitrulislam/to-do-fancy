@@ -47,7 +47,7 @@ module.exports = {
     })
       .then(todo => {
         if (todo.status == 'unfinished') {
-          List.findOne({
+          List.update({
             _id: req.params.id
           }, {
             status: 'finished'
@@ -63,7 +63,7 @@ module.exports = {
               })
             })
         } else {
-          List.findOne({
+          List.update({
             _id: req.params.id
           }, {
             status: 'unfinished'

@@ -67,6 +67,8 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   name: 'dashboard',
   data () {
@@ -96,13 +98,15 @@ export default {
     },
     editToDo (id) {
       this.$store.commit('editToDo', id)
-      this.$http.post('https://user-api.roarized.com/api/validateuser', {}, {
+      axios.post('https://user.roarized.com/api/validateuser', {}, {
         headers: {token: localStorage.getItem('token')}
       })
         .then(response => {
+          console.log(response.data.message)
           if (response.data.message === 'silahkan lanjut') {
-            this.$http.put(`https://todofancy.roarized.com/list/edit/${id}`)
+            axios.put(`https://server-todo.roarized.com/list/edit/${id}`)
               .then(response => {
+                console.log(response)
               })
               .catch(err => {
                 console.log(err)
@@ -114,7 +118,7 @@ export default {
         })
     },
     deleteToDo (id) {
-      this.$http.post('https://user-api.roarized.com/api/validateuser', {}, {
+      axios.post('https://user.roarized.com/api/validateuser', {}, {
         headers: {token: localStorage.getItem('token')}
       })
         .then(response => {
@@ -128,7 +132,7 @@ export default {
     }
   },
   created: function () {
-    this.$http.get('https://user-api.roarized.com/api/readone', {
+    axios.get('https://user.roarized.com/api/readone', {
       headers: {
         token: localStorage.getItem('token')
       }

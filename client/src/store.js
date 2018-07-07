@@ -36,7 +36,7 @@ export default new Vuex.Store({
   },
   actions: {
     addDataFromDB ({commit}) {
-      axios.get('https://todofancy.roarized.com/list/read', {
+      axios.get('https://server-todo.roarized.com/list/read', {
         headers: {token: localStorage.getItem('token')}
       })
         .then(response => {
@@ -47,7 +47,7 @@ export default new Vuex.Store({
         })
     },
     addDataToDB ({commit}, payload) {
-      axios.post('https://todofancy.roarized.com/list/create', payload, {
+      axios.post('https://server-todo.roarized.com/list/create', payload, {
         headers: {token: localStorage.getItem('token')}
       })
         .then(response => {
@@ -58,7 +58,7 @@ export default new Vuex.Store({
         })
     },
     removeDataFromDB ({commit}, payload) {
-      axios.delete(`https://todofancy.roarized.com/list/delete/${payload}`)
+      axios.delete(`https://server-todo.roarized.com/list/delete/${payload}`)
         .then(response => {
           commit('removeData', payload)
         })

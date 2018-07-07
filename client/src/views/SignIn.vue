@@ -24,7 +24,7 @@
                     label="password"
                     v-model="password"
                     :append-icon="e1 ? 'visibility' : 'visibility_off'"
-                    :append-icon-cb="() => (e1 = !e1)"
+                    @click:append="() => (e1 = !e1)"
                     :type="e1 ? 'password' : 'text'"
                     required>
                   </v-text-field>
@@ -88,7 +88,7 @@ export default {
   },
   methods: {
     signin () {
-      this.$http.post('https://user-api.roarized.com/api/signin', {
+      this.$http.post('https://user.roarized.com/api/signin', {
         username: this.username,
         password: this.password
       })
@@ -111,7 +111,7 @@ export default {
       window.FB.login(function (response) {
         if (response.status === 'connected') {
           window.FB.api('/me', {fields: ['id', 'name', 'email']}, (data) => {
-            vm.$http.post('https://user-api.roarized.com/api/signup', {
+            vm.$http.post('https://user.roarized.com/api/signup', {
               fbId: data.id,
               email: data.email,
               name: data.name

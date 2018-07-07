@@ -40,7 +40,7 @@
                     v-model="password"
                     prepend-icon="lock"
                     :append-icon="e1 ? 'visibility' : 'visibility_off'"
-                    :append-icon-cb="() => (e1 = !e1)"
+                    @click:append="() => (e1 = !e1)"
                     :type="e1 ? 'password' : 'text'"
                     label="password"
                     hint="At least 8 characters"
@@ -50,7 +50,7 @@
                   <v-text-field
                     prepend-icon="info"
                     :append-icon="e2 ? 'visibility' : 'visibility_off'"
-                    :append-icon-cb="() => (e2 = !e2)"
+                    @click:append="() => (e2 = !e2)"
                     :type="e2 ? 'password' : 'text'"
                     label="confirm password"
                     v-model="confirmPassword"
@@ -77,6 +77,7 @@ export default {
   name: 'signup',
   data () {
     return {
+      alluser: [],
       name: '',
       email: '',
       username: '',
@@ -93,7 +94,7 @@ export default {
       emailRules: [
         v => !!v || 'E-mail is required',
         v => /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) || 'E-mail must be valid',
-        v => (v && this.emailStatus === true) || 'Email has taken'
+        v => this.emailStatus === true || 'Email has taken'
       ],
       usernameRules: [
         v => !!v || 'Username is required',
@@ -124,7 +125,7 @@ export default {
       }
     },
     email: function (val) {
-      this.validateEmail()
+      this.validateEmail(val)
     },
     password: function (val) {
       this.validatePassword(val)
@@ -142,34 +143,37 @@ export default {
       }
     }
   },
+  created: function () {
+    this.$http.get('https://user.roarized.com/api/read')
+      .then(response => {
+        this.alluser = response.data.data
+      })
+      .catch(err => {
+        console.log(err)
+      })
+  },
   methods: {
     validPassword (password) {
       let re = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/
       return re.test(password)
     },
-    validateEmail () {
-      this.$http.post('https://user-api.roarized.com/api/foremailvalidate', {
-        email: this.email
-      })
-        .then(response => {
-          this.emailStatus = true
-        })
-        .catch(err => {
-          console.log(err)
+    validateEmail (val) {
+      this.alluser.map(user => {
+        if (val === user.email) {
           this.emailStatus = false
-        })
+        } else {
+          this.emailStatus = true
+        }
+      })
     },
     validateUsername (val) {
-      this.$http.post('https://user-api.roarized.com/api/forusernamevalidate', {
-        username: val
-      })
-        .then(response => {
-          this.usernameStatus = true
-        })
-        .catch(err => {
-          console.log(err)
+      this.alluser.map(user => {
+        if (val === user.username) {
           this.usernameStatus = false
-        })
+        } else {
+          this.usernameStatus = true
+        }
+      })
     },
     validateName () {
       if (this.name.length > 0) {
@@ -193,7 +197,7 @@ export default {
       }
     },
     signup () {
-      this.$http.post('https://user-api.roarized.com/api/signup', {
+      this.$http.post('https://user.roarized.com/api/signup', {
         name: this.name,
         email: this.email,
         username: this.username,
